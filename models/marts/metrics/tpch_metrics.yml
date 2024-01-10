@@ -10,29 +10,24 @@ metrics:
     type: simple
     type_params:
       measure:  orders
-
-    calculation_method: sum
-    expression: gross_item_sales_amount
-
-    timestamp: order_date
-    time_grains: [day, week, month, quarter, year]
-
-    dimensions:
-      - return_flag
-      - order_item_status_code
-      - supplier_key
-      - ship_mode
+      expression: sum(gross_item_sales_amount)
+      timestamp: order_date
+      time_grains: [day, week, month, quarter, year]
+      dimensions:
+        - return_flag
+        - order_item_status_code
+        - supplier_key
+        - ship_mode
 
   - <<: *finance-metric
     name: total_customers
-    label: Total Customers
-    model: ref('fct_order_items')
+    label: Total Customers    
     description: Total customers with an order
     type: simple
     type_params:
       measure: customers
-    calculation_method: count_distinct
-    expression: customer_key
+      calculation_method: count_distinct
+      dimension: customer_key
 
   - <<: *finance-metric
     name: total_expenses
@@ -42,7 +37,7 @@ metrics:
     type: simple
     type_params:
       measure:  orders
-    expression: supplier_cost
+      expression: supplier_cost
 
   - <<: *finance-metric
     name: total_profit
@@ -51,9 +46,9 @@ metrics:
     type: derived
     type_params:
       measure:  orders
+      expression: "{{ metric('total_revenue') }} - {{ metric('total_expenses') }}"
     calculation_method: derived
-    model: # Derived metrics cannot have a 'model' property
-    expression: "{{ metric('total_revenue') }} - {{ metric('total_expenses') }}"
+    
 
   - <<: *finance-metric
     name: average_revenue_per_customer
@@ -62,6 +57,6 @@ metrics:
     type: derived
     type_params:
       measure:  orders
+      expression: "{{ metric('total_revenue') }} / {{ metric('total_customers') }}"
     calculation_method: derived
-    model: # Derived metrics cannot have a 'model' property
-    expression: "{{ metric('total_revenue') }} / {{ metric('total_customers') }}"
+   
