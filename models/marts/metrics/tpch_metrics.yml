@@ -35,7 +35,12 @@ metrics:
     type: derived
     type_params:
       measure:  orders
-      expr: "{{ metric('total_revenue') }} - {{ metric('total_expenses') }}"
+      expr: revenue - cost
+      metrics:
+        - name: total_revenue
+          alias: revenue
+        - name: total_expenses
+          alias: cost
     calculation_method: derived
     
 
@@ -46,6 +51,11 @@ metrics:
     type: derived
     type_params:
       measure:  orders
-      expr: "{{ metric('total_revenue') }} / {{ metric('total_customers') }}"
+      expr: revenue / customers
+      metrics:
+        - name: total_revenue
+          alias: revenue
+        - name: total_customers
+          alias: customers
     calculation_method: derived
    
