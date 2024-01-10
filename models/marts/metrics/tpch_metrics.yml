@@ -4,14 +4,11 @@ metrics:
   - &finance-metric
     name: total_revenue
     label: Total Revenue
-    model: ref('fct_order_items')
     description: Total income from all orders
-    
     type: simple
     type_params:
       measure:  orders
-      expr: sum(gross_item_sales_amount)
-      
+      expr: sum(gross_item_sales_amount)    
 
   - <<: *finance-metric
     name: total_customers
