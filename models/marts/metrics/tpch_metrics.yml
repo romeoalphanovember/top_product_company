@@ -10,14 +10,8 @@ metrics:
     type: simple
     type_params:
       measure:  orders
-      expression: sum(gross_item_sales_amount)
-      timestamp: order_date
-      time_grains: [day, week, month, quarter, year]
-      dimensions:
-        - return_flag
-        - order_item_status_code
-        - supplier_key
-        - ship_mode
+      expr: sum(gross_item_sales_amount)
+      
 
   - <<: *finance-metric
     name: total_customers
@@ -26,18 +20,16 @@ metrics:
     type: simple
     type_params:
       measure: customers
-      calculation_method: count_distinct
-      dimension: customer_key
+      expr: count_distinct(customer_key)
 
   - <<: *finance-metric
     name: total_expenses
-    label: Total Expenses
-    model: ref('fct_order_items')
+    label: Total Expenses    
     description: Total expenses from all orders
     type: simple
     type_params:
       measure:  orders
-      expression: supplier_cost
+      expr: sum(supplier_cost)
 
   - <<: *finance-metric
     name: total_profit
@@ -46,7 +38,7 @@ metrics:
     type: derived
     type_params:
       measure:  orders
-      expression: "{{ metric('total_revenue') }} - {{ metric('total_expenses') }}"
+      expr: "{{ metric('total_revenue') }} - {{ metric('total_expenses') }}"
     calculation_method: derived
     
 
@@ -57,6 +49,6 @@ metrics:
     type: derived
     type_params:
       measure:  orders
-      expression: "{{ metric('total_revenue') }} / {{ metric('total_customers') }}"
+      expr: "{{ metric('total_revenue') }} / {{ metric('total_customers') }}"
     calculation_method: derived
    
