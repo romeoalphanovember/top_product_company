@@ -6,6 +6,7 @@ metrics:
     label: Total Revenue
     model: ref('fct_order_items')
     description: Total income from all orders
+    type: simple
 
     calculation_method: sum
     expression: gross_item_sales_amount
@@ -24,6 +25,7 @@ metrics:
     label: Total Customers
     model: ref('fct_order_items')
     description: Total customers with an order
+    type: simple
     calculation_method: count_distinct
     expression: customer_key
 
@@ -32,12 +34,14 @@ metrics:
     label: Total Expenses
     model: ref('fct_order_items')
     description: Total expenses from all orders
+    type: simple
     expression: supplier_cost
 
   - <<: *finance-metric
     name: total_profit
     label: Total Profit
     description: Total profit from all orders
+    type: derived
     calculation_method: derived
     model: # Derived metrics cannot have a 'model' property
     expression: "{{ metric('total_revenue') }} - {{ metric('total_expenses') }}"
@@ -46,6 +50,7 @@ metrics:
     name: average_revenue_per_customer
     label: Average Revenue Per Customer
     description: The average revenue received per customer
+    type: derived
     calculation_method: derived
     model: # Derived metrics cannot have a 'model' property
     expression: "{{ metric('total_revenue') }} / {{ metric('total_customers') }}"
